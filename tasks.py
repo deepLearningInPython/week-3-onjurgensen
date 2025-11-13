@@ -16,8 +16,8 @@ import numpy as np
 # -----------------------------------------------
 
 def compute_output_size_1d(input_array, kernel_array):
-    pass
-
+    out = len(input_array) - len(kernel_array) + 1
+    return out
 
 # -----------------------------------------------
 # Example:
@@ -37,7 +37,10 @@ print(compute_output_size_1d(input_array, kernel_array))
 def convolve_1d(input_array, kernel_array):
     # Tip: start by initializing an empty output array (you can use your function above to calculate the correct size).
     # Then fill the cells in the array with a loop.
-    pass
+    out = np.zeros(compute_output_size_1d(input_array, kernel_array))
+    for i in range(len(out)):
+        out[i] = input_array[i:i+len(kernel_array)] @ kernel_array
+    return out
 
 # -----------------------------------------------
 # Another tip: write test cases like this, so you can easily test your function.
@@ -56,9 +59,11 @@ print(convolve_1d(input_array, kernel_array))
 # -----------------------------------------------
 
 def compute_output_size_2d(input_matrix, kernel_matrix):
-    pass
-
-
+    # return (output_rows, output_cols)
+    input_rows, input_cols = input_matrix.shape
+    kernel_rows, kernel_cols = kernel_matrix.shape
+    out = (input_rows - kernel_rows + 1, input_cols - kernel_cols + 1)
+    return out
 # -----------------------------------------------
 
 
@@ -70,9 +75,15 @@ def compute_output_size_2d(input_matrix, kernel_matrix):
 # Your code here:
 # -----------------------------------------------
 def convolute_2d(input_matrix, kernel_matrix):
-    # Tip: same tips as above, but you might need a nested loop here in order to
-    # define which parts of the input matrix need to be multiplied with the kernel matrix.
-    pass
+    # compute output size (rows, cols) and allocate array
+    out_size = compute_output_size_2d(input_matrix, kernel_matrix)
+    out = np.zeros(out_size, dtype=input_matrix.dtype)
 
+    k_h, k_w = kernel_matrix.shape
+    for i in range(out.shape[0]):
+        for j in range(out.shape[1]):
+            target = input_matrix[i:i+k_h, j:j+k_w]
+            out[i, j] = (target * kernel_matrix).sum()
+    return out
 
 # -----------------------------------------------
